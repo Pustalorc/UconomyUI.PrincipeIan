@@ -4,14 +4,13 @@ namespace UconomyUI.By.PrincipeIan
 {
     public class UconomyUIConfig : IRocketPluginConfiguration
     {
+        public ushort EffectId;
         public string colorBalance;
-        public string serverName;
-        public string colorName;
+
         public void LoadDefaults()
         {
+            EffectId = 18143;
             colorBalance = "#06B409";
-            serverName = "ServerName";
-            colorName = "#B43E06";
         }
     }
 }
