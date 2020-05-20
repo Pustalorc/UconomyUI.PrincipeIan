@@ -82,7 +82,9 @@
   <ItemGroup>
     <Compile Include="UconomyUI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UconomyUIComponent.cs" />
     <Compile Include="UconomyUIConfig.cs" />
+    <Compile Include="UconomyUIRefreshCommand.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

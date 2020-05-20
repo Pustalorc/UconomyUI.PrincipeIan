@@ -1,9 +1,10 @@
-﻿using Rocket.Unturned;
-using Rocket.Core.Plugins;
+﻿using Rocket.Core.Plugins;
 using SDG.Unturned;
 using Rocket.Unturned.Player;
 using fr34kyn01535.Uconomy;
 using Rocket.Core.Logging;
+using Rocket.Unturned.Chat;
+using System;
 
 namespace UconomyUI.By.PrincipeIan
 {
@@ -15,9 +16,7 @@ namespace UconomyUI.By.PrincipeIan
         {
             Instance = this;
 
-            U.Events.OnPlayerConnected += Events_OnPlayerConnected;
             Uconomy.Instance.OnBalanceUpdate += Instance_OnBalanceUpdate;
-            U.Events.OnPlayerDisconnected += Events_OnPlayerDisconnected;
 
             Logger.Log("Plugin loaded correctly");
             Logger.Log("UconomyUI free By PrincipeIan");
@@ -25,9 +24,7 @@ namespace UconomyUI.By.PrincipeIan
 
         protected override void Unload()
         {
-            U.Events.OnPlayerConnected -= Events_OnPlayerConnected;
             Uconomy.Instance.OnBalanceUpdate -= Instance_OnBalanceUpdate;
-            U.Events.OnPlayerDisconnected -= Events_OnPlayerDisconnected;
 
             Instance = null;
 
@@ -35,19 +32,16 @@ namespace UconomyUI.By.PrincipeIan
             Logger.Log("UconomyUI free By PrincipeIan");
         }
 
-        private void Events_OnPlayerDisconnected(UnturnedPlayer player)
-        {
-            EffectManager.askEffectClearByID(Configuration.Instance.EffectId, player.CSteamID);
-        }
-
         private void Instance_OnBalanceUpdate(UnturnedPlayer player, decimal amt)
         {
-            EffectManager.sendUIEffect(Configuration.Instance.EffectId, (short) Configuration.Instance.EffectId, player.CSteamID, true,$"<color=#{Configuration.Instance.colorBalance}>{Uconomy.Instance.Database.GetBalance(player.CSteamID.ToString()).ToString()}¢</color>");
-        }
+            if (player == null) return;
+            if (player.Player == null) return;
+            if (player.GetComponent<UconomyUIComponent>() == null) return;
+            if (player.GetComponent<UconomyUIComponent>().Disabled) return;
 
-        private void Events_OnPlayerConnected(UnturnedPlayer player)
-        {
-            EffectManager.sendUIEffect(Configuration.Instance.EffectId, (short)Configuration.Instance.EffectId, player.CSteamID, true, $"<color=#{Configuration.Instance.colorBalance}>{Uconomy.Instance.Database.GetBalance(player.CSteamID.ToString()).ToString()}¢</color>");
+            EffectManager.sendUIEffect(Configuration.Instance.EffectId, (short) Configuration.Instance.EffectId,
+                player.CSteamID, true,
+                $"<color=#{Configuration.Instance.colorBalance}>${Uconomy.Instance.Database.GetBalance(player.CSteamID.ToString()).ToString()}</color>");
         }
     }
 }
